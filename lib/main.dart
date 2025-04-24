@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
+import 'screens/home/home_screen.dart';
 
 void main() {
   runApp(const BefineApp());
@@ -12,7 +12,7 @@ class BefineApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Agua Purificada Befine Corp',
+      title: 'Agua Purificada Befine',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:befine_app/screens/home/widgets/home_body.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -7,14 +8,9 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Inicio - Befine 💧'),
+        title: const Text('Bienvenido a Befine 💧'),
       ),
-      body: const Center(
-        child: Text(
-          'Bienvenido a la app de ventas Befine',
-          style: TextStyle(fontSize: 20),
-        ),
-      ),
+      body: const HomeBody(),
     );
   }
 }
