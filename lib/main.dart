@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/home/home_screen.dart';
+import 'screens/auth/login_screen.dart'; // Importamos la pantalla de login
 
 void main() {
   runApp(const BefineApp());
@@ -16,7 +16,7 @@ class BefineApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomeScreen(),
+      home: const LoginScreen(), // Pantalla inicial temporal
     );
   }
 }

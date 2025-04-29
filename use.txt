@@ -1,0 +1,15 @@
+-Clonar
+git clone git@github.com:Ivan-developer-cmngsoon/Flutter_Befinev1.git
+cd befine_app
+
+-Instalar dependencias
+flutter pub get
+
+-Ejecutar App
+flutter run
+
+Comandos para desarrollo
+flutter pub get         # Obtener dependencias
+flutter run             # Ejecutar app en emulador/dispositivo
+flutter build apk       # Generar APK para Android
+flutter clean           # Limpiar build y archivos temporales
