@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:befine_app/models/user_model.dart'; // Modelo y base simulada
+import 'package:befine_app/services/session_service.dart';
 
 // Pantallas principales por rol
 import 'package:befine_app/screens/cliente/cliente_home_screen.dart'; // Cliente
@@ -48,6 +49,9 @@ class _LoginFormState extends State<LoginForm> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Bienvenido ${user.name}')),
       );
+
+      //Guarda el usuario activo
+      SessionService.login(user);
 
       Widget destination;
 
