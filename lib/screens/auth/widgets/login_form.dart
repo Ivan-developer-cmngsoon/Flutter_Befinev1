@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:befine_app/models/user_model.dart'; // Modelo y base simulada
 
-/// Widget de formulario para que un usuario inicie sesión.
-///
-/// Actualmente simula la autenticación de manera local, sin conexión a servicios reales.
+// Pantallas principales por rol
+import 'package:befine_app/screens/cliente/cliente_home_screen.dart'; // Cliente
+import 'package:befine_app/screens/admin/admin_dashboard.dart';       // Admin
+import 'package:befine_app/screens/dueno/dueno_panel.dart';           // Dueño
+
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
 
@@ -15,18 +18,57 @@ class _LoginFormState extends State<LoginForm> {
   String _email = '';
   String _password = '';
 
-  /// Acción al presionar el botón "Ingresar"
+  /// Valida las credenciales contra la base simulada
   void _submit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      // Aquí se agregará Firebase Authentication en futuras etapas
+      // Busca un usuario que coincida con email y contraseña
+      final User? user = mockUsers.where(
+          (u) => u.email == _email && u.password == _password,
+      ).isNotEmpty
+          ? mockUsers.firstWhere((u) => u.email == _email && u.password == _password)
+          : null;
 
+
+
+
+      if (user == null) {
+        // Usuario no encontrado
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Correo o contraseña incorrectos'),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+        return;
+      }
+
+      // Usuario válido → navegación según su rol
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Inicio de sesión simulado')),
+        SnackBar(content: Text('Bienvenido ${user.name}')),
       );
 
-      // Aquí podrías redirigir al dashboard según el rol
+      Widget destination;
+
+      switch (user.role) {
+        case 'cliente':
+          destination = const ClienteHomeScreen();
+          break;
+        case 'admin':
+          destination = const AdminDashboard();
+          break;
+        case 'dueno':
+          destination = const DuenoPanel();
+          break;
+        default:
+          destination = const ClienteHomeScreen(); // Fallback
+      }
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => destination),
+      );
     }
   }
 
@@ -35,6 +77,7 @@ class _LoginFormState extends State<LoginForm> {
     return Form(
       key: _formKey,
       child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         children: [
           const SizedBox(height: 24),
           TextFormField(
