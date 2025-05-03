@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:befine_app/models/user_model.dart'; // Modelo y base simulada
+import 'package:befine_app/models/user_model.dart';
 import 'package:befine_app/services/session_service.dart';
 
-// Pantallas principales por rol
-import 'package:befine_app/screens/cliente/cliente_home_screen.dart'; // Cliente
-import 'package:befine_app/screens/admin/admin_dashboard.dart';       // Admin
-import 'package:befine_app/screens/dueno/dueno_panel.dart';           // Dueño
+// Pantallas a mostrar según rol
+import 'package:befine_app/screens/cliente/cliente_home_screen.dart';
+import 'package:befine_app/screens/admin/admin_dashboard.dart';
+import 'package:befine_app/screens/dueno/dueno_panel.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -19,20 +19,19 @@ class _LoginFormState extends State<LoginForm> {
   String _email = '';
   String _password = '';
 
-  /// Valida las credenciales contra la base simulada
-  void _submit() {
+  /// Método que se ejecuta al presionar "Ingresar"
+  /// Valida el formulario, busca el usuario en la lista mock y guarda sesión
+  void _submit() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      // Busca un usuario que coincida con email y contraseña
+      // Busca si existe el usuario en la lista simulada
       final User? user = mockUsers.where(
-          (u) => u.email == _email && u.password == _password,
+        (u) => u.email == _email && u.password == _password,
       ).isNotEmpty
-          ? mockUsers.firstWhere((u) => u.email == _email && u.password == _password)
+          ? mockUsers.firstWhere(
+              (u) => u.email == _email && u.password == _password)
           : null;
-
-
-
 
       if (user == null) {
         // Usuario no encontrado
@@ -45,16 +44,16 @@ class _LoginFormState extends State<LoginForm> {
         return;
       }
 
-      // Usuario válido → navegación según su rol
+      // Usuario válido → guardar sesión en memoria y en disco
+      await SessionService.login(user);
+
+      // Mensaje de bienvenida
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Bienvenido ${user.name}')),
       );
 
-      //Guarda el usuario activo
-      SessionService.login(user);
-
+      // Redirección según rol
       Widget destination;
-
       switch (user.role) {
         case 'cliente':
           destination = const ClienteHomeScreen();
@@ -66,7 +65,7 @@ class _LoginFormState extends State<LoginForm> {
           destination = const DuenoPanel();
           break;
         default:
-          destination = const ClienteHomeScreen(); // Fallback
+          destination = const ClienteHomeScreen(); // Por defecto
       }
 
       Navigator.pushReplacement(

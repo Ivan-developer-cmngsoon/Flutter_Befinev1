@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'widgets/login_form.dart';
-import 'register_screen.dart'; // Importación para navegar desde el login
+import 'widgets/login_form.dart'; // Contiene el formulario funcional
+import 'register_screen.dart';   // Para navegación al registro
 
-/// Pantalla principal para que el usuario inicie sesión.
-///
-/// Contiene un título, el formulario de login y un botón para ir al registro.
+/// Pantalla de inicio de sesión principal de la app Befine.
+/// 
+/// Esta pantalla contiene:
+/// - El título "Iniciar Sesión"
+/// - El formulario funcional de inicio de sesión (`LoginForm`)
+/// - Un botón que permite al usuario nuevo ir a la pantalla de registro.
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -18,15 +21,18 @@ class LoginScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const Expanded(child: LoginForm()),
+            /// Formulario de login
+            const Expanded(
+              child: LoginForm(),
+            ),
 
-            // Botón para navegar a la pantalla de registro
+            /// Botón para navegar a la pantalla de registro
             TextButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const RegisterScreen(),
+                    builder: (_) => const RegisterScreen(),
                   ),
                 );
               },
