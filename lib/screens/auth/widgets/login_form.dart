@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:befine_app/models/user_model.dart';
 import 'package:befine_app/services/session_service.dart';
+import 'package:befine_app/screens/home/home_screen.dart'; // ← Nueva pantalla principal post-login
 
-// Pantallas a mostrar según rol
-import 'package:befine_app/screens/cliente/cliente_home_screen.dart';
-import 'package:befine_app/screens/admin/admin_dashboard.dart';
-import 'package:befine_app/screens/dueno/dueno_panel.dart';
-
+/// Widget que contiene el formulario de inicio de sesión para la app Befine.
+/// Valida campos, busca al usuario simulado y redirige a HomeScreen().
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
 
@@ -19,13 +17,13 @@ class _LoginFormState extends State<LoginForm> {
   String _email = '';
   String _password = '';
 
-  /// Método que se ejecuta al presionar "Ingresar"
-  /// Valida el formulario, busca el usuario en la lista mock y guarda sesión
+  /// Método ejecutado al presionar "Ingresar"
+  /// Valida formulario, simula autenticación, guarda sesión y redirige.
   void _submit() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      // Busca si existe el usuario en la lista simulada
+      // Busca si existe el usuario en la lista simulada (mock)
       final User? user = mockUsers.where(
         (u) => u.email == _email && u.password == _password,
       ).isNotEmpty
@@ -44,7 +42,7 @@ class _LoginFormState extends State<LoginForm> {
         return;
       }
 
-      // Usuario válido → guardar sesión en memoria y en disco
+      // Usuario válido → guardar sesión en memoria y local
       await SessionService.login(user);
 
       // Mensaje de bienvenida
@@ -52,25 +50,10 @@ class _LoginFormState extends State<LoginForm> {
         SnackBar(content: Text('Bienvenido ${user.name}')),
       );
 
-      // Redirección según rol
-      Widget destination;
-      switch (user.role) {
-        case 'cliente':
-          destination = const ClienteHomeScreen();
-          break;
-        case 'admin':
-          destination = const AdminDashboard();
-          break;
-        case 'dueno':
-          destination = const DuenoPanel();
-          break;
-        default:
-          destination = const ClienteHomeScreen(); // Por defecto
-      }
-
+      // Redirigir a la pantalla principal general (HomeScreen detecta el rol)
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => destination),
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
     }
   }

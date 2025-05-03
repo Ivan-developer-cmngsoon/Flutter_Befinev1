@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'widgets/dueno_drawer.dart'; // Importa el Drawer personalizado
 
 /// Panel completo para el dueño.
 /// Acceso total: productos, pedidos, usuarios, configuraciones.
@@ -11,6 +12,7 @@ class DuenoPanel extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Panel del Dueño'),
       ),
+      drawer: const DuenoDrawer(), // Aquí agregamos el menú lateral
       body: const Center(
         child: Text(
           'Panel Dueño\n(Usuarios, Configuración, Reportes avanzados)',
