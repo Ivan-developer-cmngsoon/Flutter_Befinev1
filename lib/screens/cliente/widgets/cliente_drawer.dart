@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:befine_app/services/session_service.dart';
 import 'package:befine_app/screens/cliente/cliente_products_screen.dart';
+import 'package:befine_app/screens/cliente/cliente_cart_screen.dart';
+
 
 /// Menú lateral para el cliente.
 /// Incluye acceso al catálogo, historial, pedidos y opción de cerrar sesión.
@@ -35,17 +37,14 @@ class ClienteDrawer extends StatelessWidget {
           ),
 
           ListTile(
-            leading: const Icon(Icons.history),
-            title: const Text('Historial de Pedidos'),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
             leading: const Icon(Icons.shopping_cart),
-            title: const Text('Nuevo Pedido'),
+            title: const Text('Mi Carrito'),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.pop(context); // Cierra el Drawer
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ClienteCartScreen()),
+              );
             },
           ),
           const Divider(),

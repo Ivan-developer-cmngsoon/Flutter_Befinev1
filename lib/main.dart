@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'screens/auth/login_screen.dart'; // Importamos la pantalla de login
-import 'theme/app_theme.dart'; // 👈 Importa el tema
+import 'package:befine_app/screens/auth/login_screen.dart';
+import 'package:befine_app/theme/app_theme.dart';
+import 'package:befine_app/services/cart_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await CartService.loadCart(); // Carga los datos guardados del carrito
   runApp(const BefineApp());
 }
 
@@ -14,8 +17,8 @@ class BefineApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Agua Purificada Befine',
-      theme: AppTheme.lightTheme, // 👈 Aplica el tema
-      home: const LoginScreen(), // Pantalla inicial temporal
+      theme: AppTheme.lightTheme,
+      home: const LoginScreen(),
     );
   }
 }

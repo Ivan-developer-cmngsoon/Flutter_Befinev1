@@ -1,19 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:befine_app/models/product_model.dart';
+import 'package:befine_app/services/cart_service.dart';
 
-/// Widget que representa visualmente un producto en la app del cliente.
-///
-/// Muestra la imagen, el nombre, precio y un botón para "Agregar al pedido".
-/// Este widget es reutilizable en listas o grillas de productos.
+/// Widget reutilizable que representa visualmente un producto.
+/// Incluye imagen, nombre, descripción, precio y botón de agregar al carrito.
 class ProductCard extends StatelessWidget {
   final Product product;
-  final VoidCallback? onAdd;
 
   const ProductCard({
     super.key,
     required this.product,
-    this.onAdd,
   });
+
+  /// Lógica de acción al presionar el botón "Agregar"
+  /// Agrega el producto al carrito y muestra notificación.
+  void _handleAddToCart(BuildContext context) {
+    CartService.addToCart(product);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${product.name} agregado al carrito'),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +48,7 @@ class ProductCard extends StatelessWidget {
             ),
           ),
 
-          // Contenido textual
+          // Detalles del producto
           Padding(
             padding: const EdgeInsets.all(12),
             child: Column(
@@ -52,7 +63,7 @@ class ProductCard extends StatelessWidget {
                   product.description,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -64,9 +75,13 @@ class ProductCard extends StatelessWidget {
                         color: Colors.blueAccent,
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: onAdd,
-                      child: const Text('Agregar'),
+                    ElevatedButton.icon(
+                      onPressed: () => _handleAddToCart(context),
+                      icon: const Icon(Icons.add_shopping_cart, size: 18),
+                      label: const Text('Agregar'),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      ),
                     ),
                   ],
                 ),

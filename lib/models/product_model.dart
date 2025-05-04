@@ -1,14 +1,10 @@
-/// Modelo de datos para productos en la app Befine.
-/// Representa un producto que puede ser vendido (agua, dispensador o accesorio),
-/// con atributos básicos como id, nombre, precio, imagen, tipo y stock disponible.
-
 class Product {
   final String id;
   final String name;
   final String description;
   final double price;
   final String imageUrl;
-  final String type; // 'agua', 'dispensador', 'accesorio'
+  final String type;
   final int stock;
 
   Product({
@@ -20,4 +16,12 @@ class Product {
     required this.type,
     required this.stock,
   });
+
+  // Permite comparar productos en base a su ID
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || other is Product && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

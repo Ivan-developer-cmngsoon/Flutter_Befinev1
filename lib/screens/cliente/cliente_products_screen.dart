@@ -21,12 +21,7 @@ class ClienteProductsScreen extends StatelessWidget {
           final product = mockProducts[index];
 
           return ProductCard(
-            product: product,
-            onAdd: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${product.name} agregado al pedido')),
-              );
-            },
+            product: product, // ✅ Ya no se pasa onAdd
           );
         },
       ),
