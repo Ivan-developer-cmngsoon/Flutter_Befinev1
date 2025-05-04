@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:befine_app/services/session_service.dart';
 import 'package:befine_app/screens/cliente/cliente_products_screen.dart';
 import 'package:befine_app/screens/cliente/cliente_cart_screen.dart';
+import 'package:befine_app/screens/cliente/cliente_historial_screen.dart'; // 🆕 Importa historial
 
 
 /// Menú lateral para el cliente.
-/// Incluye acceso al catálogo, historial, pedidos y opción de cerrar sesión.
+/// Incluye acceso al catálogo, historial, carrito y opción de cerrar sesión.
 class ClienteDrawer extends StatelessWidget {
   const ClienteDrawer({super.key});
 
@@ -23,12 +24,12 @@ class ClienteDrawer extends StatelessWidget {
             ),
           ),
 
-          // 🆕 Nuevo: Acceso al catálogo de productos
+          // ✅ Catálogo de productos
           ListTile(
             leading: const Icon(Icons.store),
             title: const Text('Ver Productos'),
             onTap: () {
-              Navigator.pop(context); // Cierra el drawer
+              Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const ClienteProductsScreen()),
@@ -36,18 +37,35 @@ class ClienteDrawer extends StatelessWidget {
             },
           ),
 
+          // ✅ Carrito de compras
           ListTile(
             leading: const Icon(Icons.shopping_cart),
             title: const Text('Mi Carrito'),
             onTap: () {
-              Navigator.pop(context); // Cierra el Drawer
+              Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const ClienteCartScreen()),
               );
             },
           ),
+
+          // 🆕 Historial de pedidos
+          ListTile(
+            leading: const Icon(Icons.history),
+            title: const Text('Historial de Pedidos'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ClienteHistorialScreen()),
+              );
+            },
+          ),
+
           const Divider(),
+
+          // ✅ Logout
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Cerrar sesión'),
