@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:befine_app/models/product_model.dart';
-import 'package:befine_app/screens/cliente/widgets/product_card.dart';
+import 'package:befine_app/data/mock_products.dart';
+import 'package:befine_app/widgets/product_card.dart';
 
 /// Pantalla que muestra una lista de productos disponibles para el cliente.
 ///
