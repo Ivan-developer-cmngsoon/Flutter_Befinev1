@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:befine_app/models/product_model.dart';
+import 'package:befine_app/models/pedido_model.dart';
 import 'package:befine_app/services/cart_service.dart';
+import 'package:befine_app/services/pedido_service.dart';
 
 /// Pantalla que muestra los productos agregados al carrito del cliente.
 ///
@@ -61,7 +63,6 @@ class _ClienteCartScreenState extends State<ClienteCartScreen> {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            // Botón para restar unidad
                             IconButton(
                               icon: const Icon(Icons.remove_circle_outline),
                               onPressed: () {
@@ -70,7 +71,6 @@ class _ClienteCartScreenState extends State<ClienteCartScreen> {
                               },
                             ),
                             Text(quantity.toString()),
-                            // Botón para sumar unidad
                             IconButton(
                               icon: const Icon(Icons.add_circle_outline),
                               onPressed: () {
@@ -78,7 +78,6 @@ class _ClienteCartScreenState extends State<ClienteCartScreen> {
                                 _refreshCart();
                               },
                             ),
-                            // Botón para eliminar por completo
                             IconButton(
                               icon: const Icon(Icons.delete_outline),
                               onPressed: () {
@@ -127,14 +126,24 @@ class _ClienteCartScreenState extends State<ClienteCartScreen> {
                       ),
                       const SizedBox(height: 12),
                       ElevatedButton.icon(
-                        onPressed: () {
-                          // Simula confirmación de pedido y limpieza
+                        onPressed: () async {
+                          if (cartItems.isEmpty) return;
+
+                          final nuevoPedido = Pedido(
+                            id: DateTime.now().millisecondsSinceEpoch.toString(),
+                            fecha: DateTime.now(),
+                            productos: Map<Product, int>.from(cartItems),
+                            total: total,
+                          );
+
+                          await PedidoService.guardarPedido(nuevoPedido);
                           CartService.clearCart();
                           _refreshCart();
 
+                          if (!mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text('Pedido confirmado (simulado)'),
+                              content: Text('Pedido confirmado y guardado'),
                             ),
                           );
                           Navigator.pop(context);
