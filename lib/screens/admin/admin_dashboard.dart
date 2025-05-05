@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:befine_app/screens/admin/widgets/admin_drawer.dart';
+import 'package:befine_app/screens/admin/widgets/admin_home_body.dart';
 
-/// Panel principal del administrador.
-/// Aquí se podrán gestionar productos, pedidos y ver reportes.
+/// Pantalla principal del Administrador.
+///
+/// Integra el Drawer lateral y el contenido del dashboard.
+/// Aquí se accede a gestión de productos, pedidos y reportes.
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
 
@@ -11,13 +15,8 @@ class AdminDashboard extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Panel del Administrador'),
       ),
-      body: const Center(
-        child: Text(
-          'Panel Admin\n(Gestión de productos, pedidos, reportes)',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 18),
-        ),
-      ),
+      drawer: const AdminDrawer(), // Menú lateral del administrador
+      body: const AdminHomeBody(), // Contenido principal (modular)
     );
   }
 }

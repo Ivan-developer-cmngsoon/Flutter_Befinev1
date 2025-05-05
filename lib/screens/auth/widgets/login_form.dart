@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:befine_app/models/user_model.dart';
 import 'package:befine_app/services/session_service.dart';
-import 'package:befine_app/screens/home/home_screen.dart'; // ← Nueva pantalla principal post-login
 
-/// Widget que contiene el formulario de inicio de sesión para la app Befine.
-/// Valida campos, busca al usuario simulado y redirige a HomeScreen().
+// Pantallas según el rol del usuario
+import 'package:befine_app/screens/cliente/cliente_home_screen.dart';
+import 'package:befine_app/screens/admin/admin_dashboard.dart';
+import 'package:befine_app/screens/dueno/dueno_panel.dart';
+
+/// Formulario de inicio de sesión de la app Befine.
+/// Autentica usuarios simulados, guarda sesión y redirige según su rol.
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
 
@@ -17,22 +21,23 @@ class _LoginFormState extends State<LoginForm> {
   String _email = '';
   String _password = '';
 
-  /// Método ejecutado al presionar "Ingresar"
-  /// Valida formulario, simula autenticación, guarda sesión y redirige.
-  void _submit() async {
+  /// Acción al presionar "Ingresar"
+  Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      // Busca si existe el usuario en la lista simulada (mock)
-      final User? user = mockUsers.where(
-        (u) => u.email == _email && u.password == _password,
-      ).isNotEmpty
-          ? mockUsers.firstWhere(
-              (u) => u.email == _email && u.password == _password)
-          : null;
+      User? user;
+
+      try {
+        user = mockUsers.firstWhere(
+          (u) => u.email == _email && u.password == _password,
+        );
+      } catch (e) {
+        user = null;
+      }
+
 
       if (user == null) {
-        // Usuario no encontrado
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Correo o contraseña incorrectos'),
@@ -42,18 +47,31 @@ class _LoginFormState extends State<LoginForm> {
         return;
       }
 
-      // Usuario válido → guardar sesión en memoria y local
       await SessionService.login(user);
 
-      // Mensaje de bienvenida
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Bienvenido ${user.name}')),
       );
 
-      // Redirigir a la pantalla principal general (HomeScreen detecta el rol)
+      // Redirige a la pantalla según el rol
+      Widget destino;
+      switch (user.role.toLowerCase()) {
+        case 'cliente':
+          destino = const ClienteHomeScreen();
+          break;
+        case 'admin':
+          destino = const AdminDashboard();
+          break;
+        case 'dueno':
+          destino = const DuenoPanel();
+          break;
+        default:
+          destino = const ClienteHomeScreen(); // Rol no reconocido
+      }
+
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => destino),
       );
     }
   }

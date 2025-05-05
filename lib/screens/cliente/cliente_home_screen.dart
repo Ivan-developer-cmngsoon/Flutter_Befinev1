@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:befine_app/services/cart_service.dart';
-import 'cliente_products_screen.dart';
-import 'cliente_cart_screen.dart';
+import 'package:befine_app/screens/cliente/cliente_products_screen.dart';
+import 'package:befine_app/screens/cliente/cliente_cart_screen.dart';
+import 'package:befine_app/screens/cliente/cliente_historial_screen.dart';
+import 'package:befine_app/screens/cliente/widgets/cliente_drawer.dart';
 
-/// Pantalla principal del cliente.
-/// Muestra productos, promociones y acceso al carrito con contador dinámico.
+/// Pantalla principal tipo Dashboard del cliente con Drawer integrado.
+/// Muestra accesos rápidos, promociones y el contador de ítems en el carrito.
 class ClienteHomeScreen extends StatefulWidget {
   const ClienteHomeScreen({super.key});
 
@@ -13,34 +15,40 @@ class ClienteHomeScreen extends StatefulWidget {
 }
 
 class _ClienteHomeScreenState extends State<ClienteHomeScreen> {
-  /// Refresca el contador cada vez que se vuelve a esta pantalla
+  int _itemCount = 0;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    setState(() {});
+    _updateCartCount();
+  }
+
+  void _updateCartCount() {
+    setState(() {
+      _itemCount = CartService.getItemCount();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final int itemCount = CartService.getItemCount();
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bienvenido Cliente'),
+        title: const Text('Bienvenido, Carlos Cliente'),
         actions: [
           Stack(
             alignment: Alignment.topRight,
             children: [
               IconButton(
                 icon: const Icon(Icons.shopping_cart),
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => const ClienteCartScreen()),
-                  ).then((_) => setState(() {})); // Refresca al volver
+                  );
+                  _updateCartCount();
                 },
               ),
-              if (itemCount > 0)
+              if (_itemCount > 0)
                 Positioned(
                   right: 6,
                   top: 6,
@@ -48,7 +56,7 @@ class _ClienteHomeScreenState extends State<ClienteHomeScreen> {
                     radius: 10,
                     backgroundColor: Colors.redAccent,
                     child: Text(
-                      '$itemCount',
+                      '$_itemCount',
                       style: const TextStyle(
                         fontSize: 12,
                         color: Colors.white,
@@ -61,26 +69,57 @@ class _ClienteHomeScreenState extends State<ClienteHomeScreen> {
           ),
         ],
       ),
+      drawer: const ClienteDrawer(),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Vista del Cliente\n(Pedidos, Promociones, Historial)',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.person, color: Colors.blueAccent),
+                SizedBox(width: 8),
+                Text(
+                  'Panel del Cliente',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 12),
+            const Text(
+              'Aquí podrás realizar pedidos, ver promociones y tu historial.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 40),
+
+            ElevatedButton.icon(
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ClienteProductsScreen()),
+                );
+                _updateCartCount();
+              },
+              icon: const Icon(Icons.storefront),
+              label: const Text('Ver productos disponibles'),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                textStyle: const TextStyle(fontSize: 16),
+              ),
+            ),
+            const SizedBox(height: 16),
+
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const ClienteProductsScreen()),
-                ).then((_) => setState(() {})); // Refresca al volver
+                  MaterialPageRoute(builder: (_) => const ClienteHistorialScreen()),
+                );
               },
-              icon: const Icon(Icons.shopping_basket),
-              label: const Text('Ver productos disponibles'),
+              icon: const Icon(Icons.history),
+              label: const Text('Ver historial de pedidos'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 textStyle: const TextStyle(fontSize: 16),
