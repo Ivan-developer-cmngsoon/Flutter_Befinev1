@@ -1,9 +1,21 @@
+import 'package:hive/hive.dart';
+
+part 'user_model.g.dart'; // Este archivo se generará automáticamente
+
 /// Modelo de usuario utilizado en la app Befine.
 /// Incluye datos básicos como email, contraseña y rol (cliente, admin, dueño).
-class User {
+@HiveType(typeId: 0)
+class User extends HiveObject {
+  @HiveField(0)
   final String name;
+
+  @HiveField(1)
   final String email;
+
+  @HiveField(2)
   final String password;
+
+  @HiveField(3)
   final String role; // 'cliente', 'admin', 'dueno'
 
   User({
@@ -13,26 +25,3 @@ class User {
     required this.role,
   });
 }
-
-/// Lista de usuarios simulados para pruebas locales.
-/// Esto reemplazará temporalmente a Firebase mientras construimos la lógica.
-final List<User> mockUsers = [
-  User(
-    name: 'Carlos Cliente',
-    email: 'cliente@befine.cl',
-    password: 'cliente123',
-    role: 'cliente',
-  ),
-  User(
-    name: 'Ana Admin',
-    email: 'admin@befine.cl',
-    password: 'admin123',
-    role: 'admin',
-  ),
-  User(
-    name: 'Iván Dueño',
-    email: 'dueno@befine.cl',
-    password: 'dueno123',
-    role: 'dueno',
-  ),
-];

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:befine_app/models/user_model.dart';
 import 'package:befine_app/services/session_service.dart';
+import 'package:befine_app/services/hive_user_service.dart'; // ✅ Nuevo servicio
 
 // Pantallas según el rol del usuario
 import 'package:befine_app/screens/cliente/cliente_home_screen.dart';
@@ -8,7 +9,7 @@ import 'package:befine_app/screens/admin/admin_dashboard.dart';
 import 'package:befine_app/screens/dueno/dueno_panel.dart';
 
 /// Formulario de inicio de sesión de la app Befine.
-/// Autentica usuarios simulados, guarda sesión y redirige según su rol.
+/// Autentica usuarios desde Hive, guarda sesión y redirige según su rol.
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
 
@@ -26,16 +27,8 @@ class _LoginFormState extends State<LoginForm> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      User? user;
-
-      try {
-        user = mockUsers.firstWhere(
-          (u) => u.email == _email && u.password == _password,
-        );
-      } catch (e) {
-        user = null;
-      }
-
+      // ✅ Buscar usuario en Hive por email y password
+      final user = HiveUserService.login(_email, _password);
 
       if (user == null) {
         ScaffoldMessenger.of(context).showSnackBar(

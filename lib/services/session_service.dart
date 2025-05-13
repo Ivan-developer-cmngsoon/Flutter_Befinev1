@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:befine_app/models/user_model.dart';
 import 'package:befine_app/screens/auth/login_screen.dart';
+import 'package:befine_app/services/hive_user_service.dart'; // ✅ nuevo servicio
 
 /// Servicio centralizado para la gestión de sesión del usuario.
 /// Permite iniciar sesión, recuperar sesión y cerrar sesión de forma segura.
@@ -29,8 +30,6 @@ class SessionService {
   }
 
   /// Cierra sesión y redirige al login eliminando el historial de navegación.
-  ///
-  /// Ideal para usar tras pulsar "Cerrar sesión" en cualquier parte de la app.
   static Future<void> logoutAndRedirect(BuildContext context) async {
     await logout();
 
@@ -48,27 +47,16 @@ class SessionService {
   static bool get isLoggedIn => _currentUser != null;
 
   /// Carga la sesión desde almacenamiento local al iniciar la app.
-  ///
-  /// Utiliza una lista simulada para buscar al usuario correspondiente.
-  static Future<void> loadSession(List<User> mockUsers) async {
+  static Future<void> loadSession() async {
     final prefs = await SharedPreferences.getInstance();
     final email = prefs.getString('email');
     final role = prefs.getString('role');
-    final name = prefs.getString('name');
 
-    if (email != null && role != null && name != null) {
-      // Busca el usuario en la lista simulada
-      final user = mockUsers.firstWhere(
-        (u) => u.email == email && u.role == role,
-        orElse: () => User(
-          name: name,
-          email: email,
-          password: '', // Sin contraseña, ya que no se guarda
-          role: role,
-        ),
-      );
-
-      _currentUser = user;
+    if (email != null && role != null) {
+      final user = HiveUserService.getUserByEmail(email);
+      if (user != null && user.role == role) {
+        _currentUser = user;
+      }
     }
   }
 }

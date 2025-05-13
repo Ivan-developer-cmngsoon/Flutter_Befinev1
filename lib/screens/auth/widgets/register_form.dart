@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:befine_app/models/user_model.dart';
+import 'package:befine_app/services/hive_user_service.dart'; // ✅ Nuevo servicio
 
 /// Widget de formulario para registrar un nuevo usuario.
-/// Por ahora, simula un registro local sin conexión a Firebase.
+/// Guarda usuarios en almacenamiento local usando Hive.
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
 
@@ -12,25 +14,34 @@ class RegisterForm extends StatefulWidget {
 class _RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
 
-  // Campos simulados para registrar un nuevo usuario
   String _name = '';
   String _email = '';
   String _password = '';
 
   /// Método que se ejecuta al presionar el botón "Registrar"
-  void _submit() {
+  void _submit() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      // Aquí en el futuro se conectará Firebase u otro backend
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Registro simulado exitoso para $_name'),
-        ),
+      final newUser = User(
+        name: _name,
+        email: _email,
+        password: _password,
+        role: 'cliente',
       );
 
-      // Puedes redirigir al login o a la pantalla principal luego del registro
+      final success = await HiveUserService.addUser(newUser); // ✅
+
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Registro exitoso para $_name')),
+        );
+        // Aquí podrías limpiar el formulario o redirigir al login
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Ya existe un usuario con ese correo')),
+        );
+      }
     }
   }
 
