@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:befine_app/services/session_service.dart';
+import 'package:befine_app/screens/dueno/dueno_user_screen.dart'; // ✅ Importar la pantalla
 
 /// Menú lateral personalizado para el usuario dueño.
 /// Permite navegar entre las secciones del panel y cerrar sesión.
@@ -42,6 +43,10 @@ class DuenoDrawer extends StatelessWidget {
             title: const Text('Usuarios'),
             onTap: () {
               Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const DuenoUserScreen()),
+              );
             },
           ),
 
@@ -71,7 +76,7 @@ class DuenoDrawer extends StatelessWidget {
             title: const Text('Cerrar sesión'),
             onTap: () {
               Navigator.pop(context); // Cierra el drawer
-              SessionService.logoutAndRedirect(context); // Llama al servicio centralizado
+              SessionService.logoutAndRedirect(context); // Cierra sesión
             },
           ),
         ],

@@ -54,4 +54,18 @@ class HiveUserService {
   static Future<void> clearAll() async {
     await _userBox.clear();
   }
+    /// Actualiza los datos de un usuario existente por email
+  static Future<bool> updateUser(User updatedUser) async {
+    final key = _userBox.keys.firstWhere(
+      (k) => _userBox.get(k)?.email == updatedUser.email,
+      orElse: () => null,
+    );
+
+    if (key != null) {
+      await _userBox.put(key, updatedUser);
+      return true;
+    }
+    return false; // No se encontró el usuario
+  }
+
 }
