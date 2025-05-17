@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:befine_app/services/session_service.dart';
-import 'package:befine_app/screens/dueno/dueno_user_screen.dart'; // ✅ Importar la pantalla
+import 'package:befine_app/screens/dueno/dueno_user_screen.dart'; 
+import 'package:befine_app/screens/dueno/dueno_product_screen.dart'; 
 
 /// Menú lateral personalizado para el usuario dueño.
 /// Permite navegar entre las secciones del panel y cerrar sesión.
@@ -32,10 +33,14 @@ class DuenoDrawer extends StatelessWidget {
             leading: const Icon(Icons.inventory),
             title: const Text('Productos'),
             onTap: () {
-              Navigator.pop(context); // Cierra el drawer
-              // Aquí se puede navegar a productos en el futuro
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const DuenoProductScreen()),
+              );
             },
           ),
+
 
           // Opción: Gestión de usuarios
           ListTile(

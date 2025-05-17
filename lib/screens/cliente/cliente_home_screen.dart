@@ -31,7 +31,7 @@ class _ClienteHomeScreenState extends State<ClienteHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bienvenido, Carlos Cliente'),
+        title: const Text('Bienvenido}'),
         actions: [
           Stack(
             alignment: Alignment.topRight,
